@@ -8,19 +8,20 @@
 </head>
 <body>
     <header>
-        <div class="site-name">Live TV</div>
-        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-        <nav id="mobileMenu" class="hidden">
+        <div class="header-left">
+            <div class="site-name">Live TV</div>
+        </div>
+        <div class="header-right">
+            <input type="text" id="searchBox" oninput="showSuggestions()" placeholder="Search channels...">
+            <div id="suggestions" class="dropdown"></div>
             <select id="categorySelect" onchange="filterByCategory()">
                 <option value="">All Categories</option>
             </select>
-            <input type="text" id="searchBox" oninput="showSuggestions()" placeholder="Search channels...">
-            <div id="suggestions"></div>
             <button onclick="filterByCategory()">Search</button>
-            <button onclick="clearCache()">Clear Cache</button>
-            <button onclick="refreshPlaylist()">Refresh Playlist</button>
-            <button onclick="toggleTheme()">Toggle Dark/Light Mode</button>
-        </nav>
+            <button onclick="refreshPlaylist()">Refresh</button>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            <button onclick="toggleTheme()">🌙/☀️</button>
+        </div>
     </header>
     <main>
         <div class="grid" id="channelGrid"></div>
