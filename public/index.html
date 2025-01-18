@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live TV</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="site-name">Live TV</div>
+        <div class="controls">
+            <input type="text" id="searchBox" placeholder="Search channels...">
+            <button onclick="searchChannels()">Search</button>
+            <select id="categorySelect" onchange="filterByCategory()">
+                <option value="">All Categories</option>
+            </select>
+            <button onclick="clearCache()">Clear Cache</button>
+            <button onclick="refreshPlaylist()">Refresh Playlist</button>
+        </div>
+    </header>
+    <main>
+        <div class="grid" id="channelGrid"></div>
+        <div class="player-container">
+            <video id="tvPlayer" controls autoplay></video>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
