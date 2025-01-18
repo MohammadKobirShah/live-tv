@@ -1,4 +1,4 @@
-const playlistUrl = "https://github.com/MohammadKobirShah/mix/raw/refs/heads/main/jsyz.m3u8";
+const playlistUrl = "https://raw.githubusercontent.com/MohammadKobirShah/mix/refs/heads/main/jsyz.m3u8";
 let channels = [];
 let cacheKey = "live_tv_channels";
 
