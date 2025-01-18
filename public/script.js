@@ -1,4 +1,4 @@
-const playlistUrl = "/playlist.m3u"; // Point to the static playlist.m3u file
+const playlistUrl = "/playlist.m3u"; // Pointing to the static M3U file
 let channels = [];
 let cacheKey = "live_tv_channels";
 
@@ -10,9 +10,8 @@ async function fetchPlaylist() {
         }
         const content = await response.text();
 
-        // Parse M3U content
-        channels = parseM3U(content);
-        return channels;
+        // Parse M3U content and return channels
+        return parseM3U(content);
     } catch (error) {
         alert(error.message);
         return [];
@@ -21,11 +20,13 @@ async function fetchPlaylist() {
 
 function parseM3U(content) {
     const lines = content.split("\n");
-    const channels = [];
+    const extractedChannels = [];
     let currentChannel = {};
 
     lines.forEach(line => {
         line = line.trim();
+
+        // Extract channel metadata
         if (line.startsWith("#EXTINF:")) {
             const nameMatch = line.match(/,(.+)$/);
             const groupMatch = line.match(/group-title="([^"]+)"/);
@@ -36,14 +37,15 @@ function parseM3U(content) {
                 group: groupMatch ? groupMatch[1] : "Unknown",
                 logo: logoMatch ? logoMatch[1] : "fallback.png"
             };
-        } else if (line && !line.startsWith("#")) {
+        } else if (line.startsWith("http://port.denver1769.in")) {
+            // Extract channel URL and push the channel
             currentChannel.url = line;
-            channels.push(currentChannel);
+            extractedChannels.push(currentChannel);
             currentChannel = {};
         }
     });
 
-    return channels;
+    return extractedChannels;
 }
 
 async function loadPlaylist() {
@@ -55,11 +57,35 @@ async function loadPlaylist() {
         localStorage.setItem(cacheKey, JSON.stringify(channels));
     }
     renderChannels();
+    populateCategoryFilter();
 }
 
 function renderChannels() {
     const grid = document.getElementById("channelGrid");
     grid.innerHTML = channels.map(channel => `
+        <div class="card" onclick="goToPlayer('${channel.url}', '${channel.name}', '${channel.logo}')">
+            <img src="${channel.logo}" alt="${channel.name}">
+            <div>${channel.name}</div>
+            <div>${channel.group}</div>
+        </div>
+    `).join("");
+}
+
+function populateCategoryFilter() {
+    const categorySelect = document.getElementById("categorySelect");
+    const categories = [...new Set(channels.map(channel => channel.group))];
+    categorySelect.innerHTML = `<option value="">All Categories</option>` +
+        categories.map(category => `<option value="${category}">${category}</option>`).join("");
+}
+
+function filterByCategory() {
+    const selectedCategory = document.getElementById("categorySelect").value;
+    const filteredChannels = selectedCategory
+        ? channels.filter(channel => channel.group === selectedCategory)
+        : channels;
+
+    const grid = document.getElementById("channelGrid");
+    grid.innerHTML = filteredChannels.map(channel => `
         <div class="card" onclick="goToPlayer('${channel.url}', '${channel.name}', '${channel.logo}')">
             <img src="${channel.logo}" alt="${channel.name}">
             <div>${channel.name}</div>
