@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Player - Live TV</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jwplayer.com/libraries/KB5zFt7A.js"></script> <!-- Replace with your JW Player library key -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://cdn.jwplayer.com/libraries/KB5zFt7A.js"></script>
 </head>
 <body>
     <header>
@@ -13,35 +13,29 @@
         <a href="index.html" class="back-button">← Back to Home</a>
     </header>
     <main class="player-page">
-        <!-- Intro Overlay -->
         <div id="introOverlay" class="intro-overlay">
             <img id="introLogo" alt="Channel Logo">
             <p>You Are Watching</p>
             <h2 id="introName"></h2>
         </div>
-
-        <!-- JW Player Container -->
         <div id="jwPlayerContainer"></div>
     </main>
     <script>
         const params = new URLSearchParams(window.location.search);
         const url = params.get('url');
         const name = params.get('name');
-        const logo = params.get('logo') || 'fallback.png';
+        const logo = params.get('logo') || 'public/fallback.png';
 
-        // Set Intro Overlay
         document.getElementById('introLogo').src = logo;
         document.getElementById('introName').textContent = name;
 
-        // Fade out Intro Overlay after 5 seconds
         setTimeout(() => {
             document.getElementById('introOverlay').style.opacity = 0;
             setTimeout(() => {
                 document.getElementById('introOverlay').style.display = 'none';
-            }, 500); // Additional time to fully hide the overlay
+            }, 500);
         }, 5000);
 
-        // Initialize JW Player
         jwplayer("jwPlayerContainer").setup({
             file: url,
             image: logo,
