@@ -9,15 +9,18 @@
 <body>
     <header>
         <div class="site-name">Live TV</div>
-        <div class="controls">
-            <input type="text" id="searchBox" placeholder="Search channels...">
-            <button onclick="filterByCategory()">Search</button>
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <nav id="mobileMenu" class="hidden">
             <select id="categorySelect" onchange="filterByCategory()">
                 <option value="">All Categories</option>
             </select>
+            <input type="text" id="searchBox" oninput="showSuggestions()" placeholder="Search channels...">
+            <div id="suggestions"></div>
+            <button onclick="filterByCategory()">Search</button>
             <button onclick="clearCache()">Clear Cache</button>
             <button onclick="refreshPlaylist()">Refresh Playlist</button>
-        </div>
+            <button onclick="toggleTheme()">Toggle Dark/Light Mode</button>
+        </nav>
     </header>
     <main>
         <div class="grid" id="channelGrid"></div>
