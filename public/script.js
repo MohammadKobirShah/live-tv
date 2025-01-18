@@ -3,17 +3,20 @@ let channels = [];
 let cacheKey = "live_tv_channels";
 
 async function fetchPlaylist() {
-    const response = await fetch(playlistUrl);
-    if (!response.ok) {
-        alert(`Failed to fetch playlist: ${response.statusText}`);
+    try {
+        const response = await fetch(playlistUrl);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch playlist: ${response.statusText}`);
+        }
+        const data = await response.json();
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        return data.channels;
+    } catch (error) {
+        alert(error.message);
         return [];
     }
-    const data = await response.json();
-    if (data.error) {
-        alert(data.error);
-        return [];
-    }
-    return data.channels;
 }
 
 async function loadPlaylist() {
@@ -30,7 +33,7 @@ async function loadPlaylist() {
 function renderChannels() {
     const grid = document.getElementById("channelGrid");
     grid.innerHTML = channels.map(channel => `
-        <div class="card" onclick="playChannel('${channel.url}')">
+        <div class="card" onclick="goToPlayer('${channel.url}', '${channel.name}', '${channel.logo}')">
             <img src="${channel.logo}" alt="${channel.name}">
             <div>${channel.name}</div>
             <div>${channel.group}</div>
@@ -38,9 +41,9 @@ function renderChannels() {
     `).join("");
 }
 
-function playChannel(url) {
-    const player = document.getElementById("tvPlayer");
-    player.src = url;
+function goToPlayer(url, name, logo) {
+    const playerPageUrl = `player.html?url=${encodeURIComponent(url)}&name=${encodeURIComponent(name)}&logo=${encodeURIComponent(logo)}`;
+    window.location.href = playerPageUrl;
 }
 
 function clearCache() {
