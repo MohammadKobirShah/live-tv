@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Channel Details</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="site-name">Live TV</div>
+        <a href="index.html" class="back-button">← Back to Home</a>
+    </header>
+    <main>
+        <div class="details-container">
+            <img id="channelLogo" alt="Channel Logo">
+            <h1 id="channelName"></h1>
+            <p id="channelDescription">Channel description goes here...</p>
+            <p id="channelRating">Rating: <span>4.5</span></p>
+            <p id="channelSchedule">Schedule: <span>9:00 AM - 10:00 PM</span></p>
+            <button onclick="shareChannel('Channel Name', 'URL')">Share Channel</button>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
