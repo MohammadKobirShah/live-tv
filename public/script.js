@@ -1,10 +1,9 @@
-const playlistUrl = "/playlist.m3u"; // Pointing to the static M3U file
 let channels = [];
 let cacheKey = "live_tv_channels";
 
-async function fetchPlaylist() {
+async function fetchPlaylist(url) {
     try {
-        const response = await fetch(playlistUrl);
+        const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`Failed to fetch playlist: ${response.statusText}`);
         }
@@ -49,11 +48,17 @@ function parseM3U(content) {
 }
 
 async function loadPlaylist() {
+    const playlistUrl = prompt("https://raw.githubusercontent.com/MohammadKobirShah/ToffeeWeb/refs/heads/main/TATA_TV6.m3u");
+    if (!playlistUrl) {
+        alert("Playlist URL is required!");
+        return;
+    }
+
     const cachedData = localStorage.getItem(cacheKey);
     if (cachedData) {
         channels = JSON.parse(cachedData);
     } else {
-        channels = await fetchPlaylist();
+        channels = await fetchPlaylist(playlistUrl);
         localStorage.setItem(cacheKey, JSON.stringify(channels));
     }
     renderChannels();
