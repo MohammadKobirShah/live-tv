@@ -1,4 +1,4 @@
-const playlistUrl = "/api/playlist.php?url=https://raw.githubusercontent.com/MohammadKobirShah/ToffeeWeb/main/TATA_TV6.m3u";
+const playlistUrl = "/playlist.m3u"; // Point to the static playlist.m3u file
 let channels = [];
 let cacheKey = "live_tv_channels";
 
@@ -8,15 +8,42 @@ async function fetchPlaylist() {
         if (!response.ok) {
             throw new Error(`Failed to fetch playlist: ${response.statusText}`);
         }
-        const data = await response.json();
-        if (data.error) {
-            throw new Error(data.error);
-        }
-        return data.channels;
+        const content = await response.text();
+
+        // Parse M3U content
+        channels = parseM3U(content);
+        return channels;
     } catch (error) {
         alert(error.message);
         return [];
     }
+}
+
+function parseM3U(content) {
+    const lines = content.split("\n");
+    const channels = [];
+    let currentChannel = {};
+
+    lines.forEach(line => {
+        line = line.trim();
+        if (line.startsWith("#EXTINF:")) {
+            const nameMatch = line.match(/,(.+)$/);
+            const groupMatch = line.match(/group-title="([^"]+)"/);
+            const logoMatch = line.match(/tvg-logo="([^"]+)"/);
+
+            currentChannel = {
+                name: nameMatch ? nameMatch[1] : "Unknown",
+                group: groupMatch ? groupMatch[1] : "Unknown",
+                logo: logoMatch ? logoMatch[1] : "fallback.png"
+            };
+        } else if (line && !line.startsWith("#")) {
+            currentChannel.url = line;
+            channels.push(currentChannel);
+            currentChannel = {};
+        }
+    });
+
+    return channels;
 }
 
 async function loadPlaylist() {
