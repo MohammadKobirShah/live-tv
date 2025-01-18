@@ -1,9 +1,10 @@
+const playlistUrl = "https://raw.githubusercontent.com/MohammadKobirShah/ToffeeWeb/refs/heads/main/TATA_TV6.m3u"; // Static playlist URL
 let channels = [];
 let cacheKey = "live_tv_channels";
 
-async function fetchPlaylist(url) {
+async function fetchPlaylist() {
     try {
-        const response = await fetch(url);
+        const response = await fetch(playlistUrl);
         if (!response.ok) {
             throw new Error(`Failed to fetch playlist: ${response.statusText}`);
         }
@@ -48,70 +49,10 @@ function parseM3U(content) {
 }
 
 async function loadPlaylist() {
-    const playlistUrl = prompt("https://raw.githubusercontent.com/MohammadKobirShah/ToffeeWeb/refs/heads/main/TATA_TV6.m3u");
-    if (!playlistUrl) {
-        alert("Playlist URL is required!");
-        return;
-    }
-
     const cachedData = localStorage.getItem(cacheKey);
     if (cachedData) {
         channels = JSON.parse(cachedData);
     } else {
-        channels = await fetchPlaylist(playlistUrl);
+        channels = await fetchPlaylist();
         localStorage.setItem(cacheKey, JSON.stringify(channels));
     }
-    renderChannels();
-    populateCategoryFilter();
-}
-
-function renderChannels() {
-    const grid = document.getElementById("channelGrid");
-    grid.innerHTML = channels.map(channel => `
-        <div class="card" onclick="goToPlayer('${channel.url}', '${channel.name}', '${channel.logo}')">
-            <img src="${channel.logo}" alt="${channel.name}">
-            <div>${channel.name}</div>
-            <div>${channel.group}</div>
-        </div>
-    `).join("");
-}
-
-function populateCategoryFilter() {
-    const categorySelect = document.getElementById("categorySelect");
-    const categories = [...new Set(channels.map(channel => channel.group))];
-    categorySelect.innerHTML = `<option value="">All Categories</option>` +
-        categories.map(category => `<option value="${category}">${category}</option>`).join("");
-}
-
-function filterByCategory() {
-    const selectedCategory = document.getElementById("categorySelect").value;
-    const filteredChannels = selectedCategory
-        ? channels.filter(channel => channel.group === selectedCategory)
-        : channels;
-
-    const grid = document.getElementById("channelGrid");
-    grid.innerHTML = filteredChannels.map(channel => `
-        <div class="card" onclick="goToPlayer('${channel.url}', '${channel.name}', '${channel.logo}')">
-            <img src="${channel.logo}" alt="${channel.name}">
-            <div>${channel.name}</div>
-            <div>${channel.group}</div>
-        </div>
-    `).join("");
-}
-
-function goToPlayer(url, name, logo) {
-    const playerPageUrl = `player.html?url=${encodeURIComponent(url)}&name=${encodeURIComponent(name)}&logo=${encodeURIComponent(logo)}`;
-    window.location.href = playerPageUrl;
-}
-
-function clearCache() {
-    localStorage.removeItem(cacheKey);
-    alert("Cache cleared!");
-}
-
-function refreshPlaylist() {
-    localStorage.removeItem(cacheKey);
-    loadPlaylist();
-}
-
-loadPlaylist();
