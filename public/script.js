@@ -1,4 +1,4 @@
-const playlistUrl = "https://raw.githubusercontent.com/MohammadKobirShah/ToffeeWeb/refs/heads/main/TATA_TV6.m3u"; // Static playlist URL
+const playlistUrl = "https://github.com/MohammadKobirShah/mix/raw/refs/heads/main/jsyz.m3u8"; // Static playlist URL
 let channels = [];
 let cacheKey = "live_tv_channels";
 
