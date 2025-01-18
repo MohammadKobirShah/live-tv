@@ -1,5 +1,15 @@
 {
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/playlist.php" }
+  "cleanUrls": true,
+  "redirects": [],
+  "headers": [
+    {
+      "source": "/playlist.m3u",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/vnd.apple.mpegurl"
+        }
+      ]
+    }
   ]
 }
